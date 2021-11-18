@@ -1,0 +1,61 @@
+# Table of contents
+format: jb-book
+root: content/about/introduction
+parts:
+  - caption: DATA PREPARATION
+    chapters:
+    - file: content/tutorials/A_overview/dp_transforming
+      sections:
+      - file: content/tutorials/python/python_transforming
+      - file: content/tutorials/shell/shell_transforming
+      - file: content/tutorials/matlab/matlab_transforming
+      - file: content/tutorials/mathematica/mathematica_transforming
+    - file: content/tutorials/A_overview/dp_extracting
+      sections:
+       - file: content/tutorials/python/python_extracting
+       - file: content/tutorials/shell/shell_extracting
+       - file: content/tutorials/matlab/matlab_extracting
+       - file: content/tutorials/mathematica/mathematica_extracting
+    - file: content/tutorials/A_overview/dp_filtering
+      sections:
+      - file: content/tutorials/python/python_filtering
+      - file: content/tutorials/shell/shell_filtering
+      - file: content/tutorials/matlab/matlab_filtering
+      - file: content/tutorials/mathematica/mathematica_filtering
+  - caption: DATA ANALYSIS
+    chapters:
+    - file: content/tutorials/A_overview/da_stats
+      sections:
+      - file: content/tutorials/python/python_stats
+      - file: content/tutorials/shell/shell_stats
+      - file: content/tutorials/matlab/matlab_stats
+      - file: content/tutorials/mathematica/mathematica_stats     
+    - file: content/tutorials/A_overview/da_comparison
+      sections:
+      - file: content/tutorials/python/python_comparison
+      - file: content/tutorials/shell/shell_comparison
+      - file: content/tutorials/matlab/matlab_comparison
+      - file: content/tutorials/mathematica/mathematica_comparison
+  - caption: DATA VISUALIZATION
+    chapters:
+    - file: content/tutorials/A_overview/dv_2D
+      sections:
+      - file: content/tutorials/python/python_2D
+      - file: content/tutorials/shell/shell_2D
+      - file: content/tutorials/matlab/matlab_2D
+      - file: content/tutorials/mathematica/mathematica_2D     
+    - file: content/tutorials/A_overview/dv_3D
+      sections:
+      - file: content/tutorials/python/python_3D
+      - file: content/tutorials/matlab/matlab_3D
+      - file: content/tutorials/mathematica/mathematica_3D
+    - file: content/tutorials/A_overview/dv_interactive_plots
+      sections:
+      - file: content/tutorials/python/python_interactive_plots
+      - file: content/tutorials/matlab/matlab_interactive_plots
+      - file: content/tutorials/mathematica/mathematica_interactive_plots
+  - caption: ABOUT
+    chapters:
+    - file: content/about/contributing
+    - file: content/about/license_reuse
+    - file: content/about/tech_details
