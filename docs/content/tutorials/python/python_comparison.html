@@ -461,22 +461,6 @@
 
             <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        
-        
-        <a class="colab-button" href="https://colab.research.google.com/github/ualibweb/UALIB_Data_Informatics_Tutorials/blob/main/content/tutorials/python/python_comparison.ipynb"><button type="button" class="btn btn-secondary topbarbtn"
-                title="Launch Colab" data-toggle="tooltip" data-placement="left"><img class="colab-button-logo"
-                    src="../../../_static/images/logo_colab.png"
-                    alt="Interact on Colab">Colab</button></a>
-        
-        
-    </div>
-</div>
-
         </div>
 
         <!-- Table of contents -->
@@ -491,6 +475,33 @@
   <a class="reference internal nav-link" href="#comparing-data-in-python">
    Comparing Data in Python
   </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#difference-between-datasets">
+   1. Difference between datasets
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#import-libraries">
+     Import libraries
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#context-diff">
+     Context diff
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#unified-diff">
+     Unified diff
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#side-by-side-html-diff">
+     Side by Side HTML diff
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -507,7 +518,151 @@
 <h1>…in Python<a class="headerlink" href="#in-python" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="comparing-data-in-python">
 <h2>Comparing Data in Python<a class="headerlink" href="#comparing-data-in-python" title="Permalink to this headline">¶</a></h2>
-<p>by TBD</p>
+<p>by Anastasia Ramig</p>
+<p>These recipe examples were tested on January 24, 2022.</p>
+</div>
+<div class="section" id="difference-between-datasets">
+<h2>1. Difference between datasets<a class="headerlink" href="#difference-between-datasets" title="Permalink to this headline">¶</a></h2>
+<p>Python includes the <a class="reference external" href="https://docs.python.org/3/library/difflib.html">difflib</a> library for computing deltas. This can be used for comparing differences in files, for example.</p>
+<p>We’re going to use the <code class="docutils literal notranslate"><span class="pre">WeiningerCEX_132_reading_smilesvalence.txt</span></code> and <code class="docutils literal notranslate"><span class="pre">avalon_1.2.0_reading_smilesvalence.txt</span></code> files to demonstrate some of the difflib functions. You can find these files <a class="reference external" href="https://github.com/ualibweb/UALIB_Workshops/tree/master/02_Unix_fall_2020/Udata/Benchmark">here</a>.</p>
+<div class="section" id="import-libraries">
+<h3>Import libraries<a class="headerlink" href="#import-libraries" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">difflib</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="context-diff">
+<h3>Context diff<a class="headerlink" href="#context-diff" title="Permalink to this headline">¶</a></h3>
+<p>Print the context_diff between files</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file1</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;WeiningerCEX_132_reading_smilesvalence.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="n">file2</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;avalon_1.2.0_reading_smilesvalence.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="n">cdiff</span> <span class="o">=</span> <span class="n">difflib</span><span class="o">.</span><span class="n">context_diff</span><span class="p">(</span><span class="n">file1</span><span class="p">,</span> <span class="n">file2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cdiff</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** 
+ --- 
+ ***************
+ *** 43,61 ****
+   F5 0 3 3 3 3 3
+   Cl0 1
+   Cl1 0 3
+ ! Cl2 0 3 3
+   Cl3 0 3 3 3
+ ! Cl4 0 3 3 3 3
+   Cl5 0 3 3 3 3 3
+   Br0 1
+   Br1 0 3
+ ! Br2 0 3 3
+   Br3 0 3 3 3
+ ! Br4 0 3 3 3 3
+   Br5 0 3 3 3 3 3
+   I0 1
+   I1 0 3
+ ! I2 0 3 3
+   I3 0 3 3 3
+ ! I4 0 3 3 3 3
+   I5 0 3 3 3 3 3
+ --- 43,61 ----
+   F5 0 3 3 3 3 3
+   Cl0 1
+   Cl1 0 3
+ ! Cl2 1 3 3
+   Cl3 0 3 3 3
+ ! Cl4 1 3 3 3 3
+   Cl5 0 3 3 3 3 3
+   Br0 1
+   Br1 0 3
+ ! Br2 1 3 3
+   Br3 0 3 3 3
+ ! Br4 1 3 3 3 3
+   Br5 0 3 3 3 3 3
+   I0 1
+   I1 0 3
+ ! I2 1 3 3
+   I3 0 3 3 3
+ ! I4 1 3 3 3 3
+   I5 0 3 3 3 3 3
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="unified-diff">
+<h3>Unified diff<a class="headerlink" href="#unified-diff" title="Permalink to this headline">¶</a></h3>
+<p>Print the unified_diff between files</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file1</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;WeiningerCEX_132_reading_smilesvalence.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="n">file2</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;avalon_1.2.0_reading_smilesvalence.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="n">udiff</span> <span class="o">=</span> <span class="n">difflib</span><span class="o">.</span><span class="n">unified_diff</span><span class="p">(</span><span class="n">file1</span><span class="p">,</span> <span class="n">file2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">udiff</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- 
+ +++ 
+ @@ -43,19 +43,19 @@
+  F5 0 3 3 3 3 3
+  Cl0 1
+  Cl1 0 3
+ -Cl2 0 3 3
+ +Cl2 1 3 3
+  Cl3 0 3 3 3
+ -Cl4 0 3 3 3 3
+ +Cl4 1 3 3 3 3
+  Cl5 0 3 3 3 3 3
+  Br0 1
+  Br1 0 3
+ -Br2 0 3 3
+ +Br2 1 3 3
+  Br3 0 3 3 3
+ -Br4 0 3 3 3 3
+ +Br4 1 3 3 3 3
+  Br5 0 3 3 3 3 3
+  I0 1
+  I1 0 3
+ -I2 0 3 3
+ +I2 1 3 3
+  I3 0 3 3 3
+ -I4 0 3 3 3 3
+ +I4 1 3 3 3 3
+  I5 0 3 3 3 3 3
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="side-by-side-html-diff">
+<h3>Side by Side HTML diff<a class="headerlink" href="#side-by-side-html-diff" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">difflib.HTMLDiff</span></code> class can be used to generate an HTML formatted side by side comparison of the files which can be displayed directly within a Jupyter Notebook. Here is a recipe below. Note that the output is not shown here.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">difflib</span>
+<span class="kn">from</span> <span class="nn">IPython</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="n">file1</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;WeiningerCEX_132_reading_smilesvalence.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="n">file2</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;avalon_1.2.0_reading_smilesvalence.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+<span class="n">sbs_diff</span> <span class="o">=</span> <span class="n">difflib</span><span class="o">.</span><span class="n">HtmlDiff</span><span class="p">(</span><span class="n">tabsize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;sbs_diff_table.html&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">sbs_diff</span><span class="o">.</span><span class="n">make_file</span><span class="p">(</span><span class="n">fromlines</span><span class="o">=</span><span class="n">file1</span><span class="p">,</span> <span class="n">tolines</span><span class="o">=</span><span class="n">file2</span><span class="p">,</span> 
+                                <span class="n">fromdesc</span><span class="o">=</span><span class="s1">&#39;WeiningerCEX_132_reading_smilesvalence&#39;</span><span class="p">,</span> <span class="n">todesc</span><span class="o">=</span><span class="s1">&#39;avalon_1.2.0_reading_smilesvalence&#39;</span><span class="p">)</span>
+    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+<span class="n">display</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sbs_diff_table.html&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 

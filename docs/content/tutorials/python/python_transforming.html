@@ -461,22 +461,6 @@
 
             <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        
-        
-        <a class="colab-button" href="https://colab.research.google.com/github/ualibweb/UALIB_Data_Informatics_Tutorials/blob/main/content/tutorials/python/python_transforming.ipynb"><button type="button" class="btn btn-secondary topbarbtn"
-                title="Launch Colab" data-toggle="tooltip" data-placement="left"><img class="colab-button-logo"
-                    src="../../../_static/images/logo_colab.png"
-                    alt="Interact on Colab">Colab</button></a>
-        
-        
-    </div>
-</div>
-
         </div>
 
         <!-- Table of contents -->
@@ -491,6 +475,43 @@
   <a class="reference internal nav-link" href="#transforming-data-in-python">
    Transforming Data in Python
   </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#json-data-to-pandas-datafrane">
+   1. JSON data to Pandas DataFrane
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#import-libraries">
+     Import libraries
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#read-json-data">
+     Read JSON data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-a-dataframe">
+     Create a DataFrame
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#index-nested-data">
+     Index nested data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#normalize">
+     Normalize
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transpose">
+     Transpose
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -507,7 +528,313 @@
 <h1>…in Python<a class="headerlink" href="#in-python" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="transforming-data-in-python">
 <h2>Transforming Data in Python<a class="headerlink" href="#transforming-data-in-python" title="Permalink to this headline">¶</a></h2>
-<p>by TBD</p>
+<p>by Anastasia Ramig</p>
+<p>These recipe examples were tested on January 24, 2022.</p>
+</div>
+<div class="section" id="json-data-to-pandas-datafrane">
+<h2>1. JSON data to Pandas DataFrane<a class="headerlink" href="#json-data-to-pandas-datafrane" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://pandas.pydata.org/">pandas library</a> makes it easier to work with data in Python. There are many types of data that can be loaded into pandas. This tutorial is going to show how to parse JSON data (a common data type used for scholarly web APIs) into a pandas DataFrame. We’re going to use a sample dataset from <a class="reference external" href="https://pubchemdocs.ncbi.nlm.nih.gov/pug-rest">PubChem</a> that can be found using this <a class="reference external" href="https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/1,2,3,4,5/property/IUPACName,MolecularFormula,MolecularWeight,InChIKey/JSON">link</a>. Copy the data and save it to a json file, named <code class="docutils literal notranslate"><span class="pre">molecular_data.json</span></code>.</p>
+<div class="section" id="import-libraries">
+<h3>Import libraries<a class="headerlink" href="#import-libraries" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">pandas.io.json</span> <span class="kn">import</span> <span class="n">json_normalize</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>To parse JSON data into pandas, we read the data into a Python dictionary, as shown below.</p>
+</div>
+<div class="section" id="read-json-data">
+<h3>Read JSON data<a class="headerlink" href="#read-json-data" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;molecular_data.json&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">infile</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;PropertyTable&#39;: {&#39;Properties&#39;: [{&#39;CID&#39;: 1,
+    &#39;MolecularFormula&#39;: &#39;C9H17NO4&#39;,
+    &#39;MolecularWeight&#39;: &#39;203.24&#39;,
+    &#39;InChIKey&#39;: &#39;RDHQFKQIGNGIED-UHFFFAOYSA-N&#39;,
+    &#39;IUPACName&#39;: &#39;3-acetyloxy-4-(trimethylazaniumyl)butanoate&#39;},
+   {&#39;CID&#39;: 2,
+    &#39;MolecularFormula&#39;: &#39;C9H18NO4+&#39;,
+    &#39;MolecularWeight&#39;: &#39;204.24&#39;,
+    &#39;InChIKey&#39;: &#39;RDHQFKQIGNGIED-UHFFFAOYSA-O&#39;,
+    &#39;IUPACName&#39;: &#39;(2-acetyloxy-3-carboxypropyl)-trimethylazanium&#39;},
+   {&#39;CID&#39;: 3,
+    &#39;MolecularFormula&#39;: &#39;C7H8O4&#39;,
+    &#39;MolecularWeight&#39;: &#39;156.14&#39;,
+    &#39;InChIKey&#39;: &#39;INCSWYKICIYAHB-UHFFFAOYSA-N&#39;,
+    &#39;IUPACName&#39;: &#39;5,6-dihydroxycyclohexa-1,3-diene-1-carboxylic acid&#39;},
+   {&#39;CID&#39;: 4,
+    &#39;MolecularFormula&#39;: &#39;C3H9NO&#39;,
+    &#39;MolecularWeight&#39;: &#39;75.11&#39;,
+    &#39;InChIKey&#39;: &#39;HXKKHQJGJAFBHI-UHFFFAOYSA-N&#39;,
+    &#39;IUPACName&#39;: &#39;1-aminopropan-2-ol&#39;},
+   {&#39;CID&#39;: 5,
+    &#39;MolecularFormula&#39;: &#39;C3H8NO5P&#39;,
+    &#39;MolecularWeight&#39;: &#39;169.07&#39;,
+    &#39;InChIKey&#39;: &#39;HIQNVODXENYOFK-UHFFFAOYSA-N&#39;,
+    &#39;IUPACName&#39;: &#39;(3-amino-2-oxopropyl) dihydrogen phosphate&#39;}]}}
+</pre></div>
+</div>
+</div>
+</div>
+<p>As you can see from the displayed data above, our dictionary contains nested dictionaries, which means that if we try to create a DataFrame, we will get a single value that consists of our nested dictionaries:</p>
+</div>
+<div class="section" id="create-a-dataframe">
+<h3>Create a DataFrame<a class="headerlink" href="#create-a-dataframe" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PropertyTable</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Properties</th>
+      <td>[{'CID': 1, 'MolecularFormula': 'C9H17NO4', 'M...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>To unpack this into a DataFrame with pandas, we first index into the DataFrame.</p>
+</div>
+<div class="section" id="index-nested-data">
+<h3>Index nested data<a class="headerlink" href="#index-nested-data" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data2</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">data2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[{&#39;CID&#39;: 1,
+  &#39;MolecularFormula&#39;: &#39;C9H17NO4&#39;,
+  &#39;MolecularWeight&#39;: &#39;203.24&#39;,
+  &#39;InChIKey&#39;: &#39;RDHQFKQIGNGIED-UHFFFAOYSA-N&#39;,
+  &#39;IUPACName&#39;: &#39;3-acetyloxy-4-(trimethylazaniumyl)butanoate&#39;},
+ {&#39;CID&#39;: 2,
+  &#39;MolecularFormula&#39;: &#39;C9H18NO4+&#39;,
+  &#39;MolecularWeight&#39;: &#39;204.24&#39;,
+  &#39;InChIKey&#39;: &#39;RDHQFKQIGNGIED-UHFFFAOYSA-O&#39;,
+  &#39;IUPACName&#39;: &#39;(2-acetyloxy-3-carboxypropyl)-trimethylazanium&#39;},
+ {&#39;CID&#39;: 3,
+  &#39;MolecularFormula&#39;: &#39;C7H8O4&#39;,
+  &#39;MolecularWeight&#39;: &#39;156.14&#39;,
+  &#39;InChIKey&#39;: &#39;INCSWYKICIYAHB-UHFFFAOYSA-N&#39;,
+  &#39;IUPACName&#39;: &#39;5,6-dihydroxycyclohexa-1,3-diene-1-carboxylic acid&#39;},
+ {&#39;CID&#39;: 4,
+  &#39;MolecularFormula&#39;: &#39;C3H9NO&#39;,
+  &#39;MolecularWeight&#39;: &#39;75.11&#39;,
+  &#39;InChIKey&#39;: &#39;HXKKHQJGJAFBHI-UHFFFAOYSA-N&#39;,
+  &#39;IUPACName&#39;: &#39;1-aminopropan-2-ol&#39;},
+ {&#39;CID&#39;: 5,
+  &#39;MolecularFormula&#39;: &#39;C3H8NO5P&#39;,
+  &#39;MolecularWeight&#39;: &#39;169.07&#39;,
+  &#39;InChIKey&#39;: &#39;HIQNVODXENYOFK-UHFFFAOYSA-N&#39;,
+  &#39;IUPACName&#39;: &#39;(3-amino-2-oxopropyl) dihydrogen phosphate&#39;}]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="normalize">
+<h3>Normalize<a class="headerlink" href="#normalize" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># use json_normalize() to unpack the nested dictionaries into a flat table DataFrame</span>
+<span class="n">mol_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>
+<span class="n">mol_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CID</th>
+      <th>MolecularFormula</th>
+      <th>MolecularWeight</th>
+      <th>InChIKey</th>
+      <th>IUPACName</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>C9H17NO4</td>
+      <td>203.24</td>
+      <td>RDHQFKQIGNGIED-UHFFFAOYSA-N</td>
+      <td>3-acetyloxy-4-(trimethylazaniumyl)butanoate</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>C9H18NO4+</td>
+      <td>204.24</td>
+      <td>RDHQFKQIGNGIED-UHFFFAOYSA-O</td>
+      <td>(2-acetyloxy-3-carboxypropyl)-trimethylazanium</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>C7H8O4</td>
+      <td>156.14</td>
+      <td>INCSWYKICIYAHB-UHFFFAOYSA-N</td>
+      <td>5,6-dihydroxycyclohexa-1,3-diene-1-carboxylic ...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>C3H9NO</td>
+      <td>75.11</td>
+      <td>HXKKHQJGJAFBHI-UHFFFAOYSA-N</td>
+      <td>1-aminopropan-2-ol</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>C3H8NO5P</td>
+      <td>169.07</td>
+      <td>HIQNVODXENYOFK-UHFFFAOYSA-N</td>
+      <td>(3-amino-2-oxopropyl) dihydrogen phosphate</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="transpose">
+<h3>Transpose<a class="headerlink" href="#transpose" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># transpose the DataFrame if desired</span>
+<span class="n">mol_data2</span> <span class="o">=</span> <span class="n">mol_data</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+<span class="n">mol_data2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>CID</th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>MolecularFormula</th>
+      <td>C9H17NO4</td>
+      <td>C9H18NO4+</td>
+      <td>C7H8O4</td>
+      <td>C3H9NO</td>
+      <td>C3H8NO5P</td>
+    </tr>
+    <tr>
+      <th>MolecularWeight</th>
+      <td>203.24</td>
+      <td>204.24</td>
+      <td>156.14</td>
+      <td>75.11</td>
+      <td>169.07</td>
+    </tr>
+    <tr>
+      <th>InChIKey</th>
+      <td>RDHQFKQIGNGIED-UHFFFAOYSA-N</td>
+      <td>RDHQFKQIGNGIED-UHFFFAOYSA-O</td>
+      <td>INCSWYKICIYAHB-UHFFFAOYSA-N</td>
+      <td>HXKKHQJGJAFBHI-UHFFFAOYSA-N</td>
+      <td>HIQNVODXENYOFK-UHFFFAOYSA-N</td>
+    </tr>
+    <tr>
+      <th>IUPACName</th>
+      <td>3-acetyloxy-4-(trimethylazaniumyl)butanoate</td>
+      <td>(2-acetyloxy-3-carboxypropyl)-trimethylazanium</td>
+      <td>5,6-dihydroxycyclohexa-1,3-diene-1-carboxylic ...</td>
+      <td>1-aminopropan-2-ol</td>
+      <td>(3-amino-2-oxopropyl) dihydrogen phosphate</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
 </div>
 </div>
 
